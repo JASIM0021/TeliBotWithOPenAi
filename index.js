@@ -39,10 +39,10 @@ bot.on('message', async (msg) => {
 
 // for wonner purpose 
 
-if(msg.text.toLowerCase().includes('what is your name')){
+if(msg.text?.toLowerCase().includes('what is your name')){
     return bot.sendMessage(chatId,'I am an Ai assistant , you can call me JASIM')
 }
-if(msg.text.toLowerCase().includes('jasim')){
+if(msg.text?.toLowerCase().includes('jasim')){
     return bot.sendMessage(chatId,'Yes I am here to help! just ask me anything but dont repeat my name :)')
 }
 
