@@ -38,16 +38,13 @@ console.log('msg', msg)
         return  bot.sendMessage(msg.chat.id, 'Welcome! Please choose an option:', menuOptions);
 
     }
-    if( ['Benguli'].includes(msg.text)){
+    if(  ['বাংলা কথা'].includes(msg.text)){
         const prompt = `can u please set your primary language as   ${msg.text} from now `;
         const chatCompletion = await openai.chat.completions.create({
             messages: [{ role: 'user', content:prompt }],
             model: 'gpt-3.5-turbo',
           });
-          response =await refineResponse({
-            openai:openai,
-            text:msg.text
-        });
+          let response = chatCompletion.choices[0]?.message.content || ''
 
        return  bot.sendMessage(chatId,response)
     }
@@ -81,10 +78,10 @@ console.log('msg', msg)
           });
              // Refine and personalize response
     let response = chatCompletion.choices[0]?.message.content || '';
-    response =await refineResponse({
-        openai:openai,
-        text:response
-    }); // Implement your refinement logic
+    // response =await refineResponse({
+    //     openai:openai,
+    //     text:response
+    // }); // Implement your refinement logic
 
     // Add follow-up prompt (optional)
     if (Math.random() < 0.3) { // 30% chance of follow-up question
