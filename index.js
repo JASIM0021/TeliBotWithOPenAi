@@ -18,7 +18,8 @@ var openai = new OpenAI({
   const menuOptions = {
     reply_markup: JSON.stringify({
         keyboard: [
-            ['বাংলা কথা'],
+            ['GirlFriends',"BoyFriends"],
+            ['বাংলা','English'],
             ['Education', 'Fun'],
             ['Technological', 'Creative']
         ]
@@ -30,23 +31,42 @@ var openai = new OpenAI({
 // Handle incoming messages
 let chatMode = 'Educational';
 
+let language = 'English'
+
 bot.on('message', async (msg) => {
     const chatId = msg.chat.id;
     const messageText = msg.text;
+
+// for wonner purpose 
+
+if(msg.text.toLowerCase().includes('what is your name')){
+    return bot.sendMessage(chatId,'I am an Ai assistant , you can call me JASIM')
+}
+if(msg.text.toLowerCase().includes('jasim')){
+    return bot.sendMessage(chatId,'Yes I am here to help! just ask me anything but dont repeat my name :)')
+}
+
+
+
+
+
 console.log('msg', msg)
     if (msg.text == '/start'){
         return  bot.sendMessage(msg.chat.id, 'Welcome! Please choose an option:', menuOptions);
 
     }
-    if(  ['বাংলা কথা'].includes(msg.text)){
-        const prompt = `can u please set your primary language as   ${msg.text} from now `;
-        const chatCompletion = await openai.chat.completions.create({
-            messages: [{ role: 'user', content:prompt }],
-            model: 'gpt-3.5-turbo',
-          });
-          let response = chatCompletion.choices[0]?.message.content || ''
 
-       return  bot.sendMessage(chatId,response)
+if(['Talk as a GirlFriends',"Talk as a BoyFriends"].includes(msg.text)){
+    chatMode = msg.text 
+
+    return bot.sendMessage(chatId,"from now you are my "+msg.text.substring(10,msg.text.length))
+}
+
+    if(  ['বাংলা','English'].includes(msg.text)){
+        
+        language = msg.text
+
+       return  bot.sendMessage(chatId,`Selected ${msg.text}`)
     }
    
     if(['Education', 'Fun','Technological', 'Creative'].includes(msg.text)){
@@ -71,22 +91,24 @@ console.log('msg', msg)
         console.log('sentiment', sentiment)
     try {
         // Send message to OpenAI for generating response
-        const prompt = `From ${chatMode} perspective, ${messageText}`;
+        const prompt = `Emagine your my  ${chatMode} person in life and now i want to ask u    ${messageText}`;
         const chatCompletion = await openai.chat.completions.create({
             messages: [{ role: 'user', content:prompt }],
             model: 'gpt-3.5-turbo',
           });
              // Refine and personalize response
     let response = chatCompletion.choices[0]?.message.content || '';
-    // response =await refineResponse({
-    //     openai:openai,
-    //     text:response
-    // }); // Implement your refinement logic
+    response =await refineResponse({
+        openai:openai,
+        text:response,
+        language:language,
+       
+    }); // Implement your refinement logic
 
     // Add follow-up prompt (optional)
-    if (Math.random() < 0.3) { // 30% chance of follow-up question
-      response += '\nWould you like to know more about that?';
-    }
+    // if (Math.random() < 0.3) { // 30% chance of follow-up question
+    //   response += '\nWould you like to know more about that?';
+    // }
 
     // Send final response
     bot.sendMessage(chatId, response);
