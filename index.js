@@ -2,7 +2,7 @@ const TelegramBot = require('node-telegram-bot-api');
 const OpenAI = require('openai');
 const dotenv = require('dotenv').config()
 
-const express = require('expres')
+const express = require('express')
 
 const app = express()
 
