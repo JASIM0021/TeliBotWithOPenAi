@@ -2,6 +2,11 @@ const TelegramBot = require('node-telegram-bot-api');
 const OpenAI = require('openai');
 const dotenv = require('dotenv').config()
 
+const express = require('expres')
+
+const app = express()
+
+
 
 const { analyzeSentiment, refineResponse } = require('./logic');
 
@@ -119,4 +124,16 @@ if(['Talk as a GirlFriends',"Talk as a BoyFriends"].includes(msg.text)){
         console.error('Error:', error);
         bot.sendMessage(chatId, 'Sorry, an error occurred.');
     }
+});
+
+const port =process.env.PORT || 3000;
+
+// GET request handler for the root route
+app.get('/', (req, res) => {
+  res.send('Hello, world!');
+});
+
+// Start the server
+app.listen(port, () => {
+  console.log(`Server is running on http://localhost:${port}`);
 });
